@@ -1,0 +1,148 @@
+<?php
+/**
+ * Veritrans VT Direct Model Standard
+ *
+ * @category   Mage
+ * @package    vtdirect/form.phtml
+ * @author     denny
+ * this template is rendered when Veritrans payment method is chosen. This is description about Veritrans Payment Method
+ */
+?>
+
+<script type="text/javascript">
+		
+		var env = "<?php echo Mage::getStoreConfig('payment/vtdirect/environment'); ?>";
+
+		if ( env == 'production' ) {
+			Veritrans.url = "https://api.veritrans.co.id/v2/token";
+		} else {
+			Veritrans.url = "https://api.sandbox.veritrans.co.id/v2/token";
+		}
+
+	  Veritrans.client_key = "<?php echo Mage::getStoreConfig('payment/vtdirect/client_key_v2');?>";
+	  var card = function(){
+		return {
+		  'card_number'     : jQuery("#card-number").val(),
+		  'card_exp_month'  : jQuery("#card-expiry-month").val(),
+		  'card_exp_year'   : jQuery("#card-expiry-year").val(),
+		  'card_cvv'        : jQuery("#card-cvv").val(),
+
+		  'secure'       : true,
+		  'bank'       : 'bni',
+		  'gross_amount'   : jQuery("#price").val()
+		}
+	  };
+
+	  
+
+	  function openDialog(url) {
+		jQuery.fancybox.open({
+			  href: url,
+			  type: 'iframe',
+			  autoDimensions: false,
+			  autoSize: false,
+			  width: '400',
+			  height: '600',
+			  closeBtn: false,
+			  scrolling : 'no',
+			  modal: true
+		  });
+	  }
+
+	  function closeDialog() {
+		jQuery.fancybox.close();
+	  }
+	  
+
+	  function callback(response) {
+		if (response.redirect_url) {
+		  console.log('Open Dialog 3Dsecure');
+		  openDialog(response.redirect_url);
+
+		} else if (response.status_code == '200') {
+			closeDialog();
+
+			jQuery("#token-id").val(response.token_id);
+			jQuery("#tcheckout-form").submit();
+		} else {
+		console.log(response);
+		  closeDialog();
+		  jQuery('#tcheckout-save-btn').removeAttr('disabled');
+		}
+	  }
+	  
+	  
+		jQuery('#tcheckout-save-btn').click(function(event){
+			if(jQuery('.radio:checked').val() == 'vtdirect') {
+				event.preventDefault();
+				
+				jQuery(this).attr("disabled", "disabled"); 
+				Veritrans.token(card, callback);
+				return false;
+			}
+		  });
+		
+		<?php
+			$error=Mage::getSingleton('core/session')->getERM();
+			if(!empty($error)){
+			?>
+				
+			jQuery("#p_method_vtdirect").click();
+			<?php	
+			}
+			else{
+			?>
+				
+			jQuery("#p_method_vtdirect").removeAttr('checked');
+			<?php	
+			
+			}
+		?>
+	  
+</script>
+
+
+
+<ul class="form-list" id="payment_form_<?php echo $this->getMethodCode() ?>" style="display:none;">
+    <li>
+	<img src="<?php echo $this->getSkinUrl('images/Veritrans.png') ?>"/> [ Visa / Master Card ] <br/>
+	</li>
+	<li>
+		<span id='message'></span>
+	</li>
+	<li>
+		<label>Card Number</label>
+		<div class="input-box">
+		<input id="card-number" size="20" type="text" value="4811111111111114"/>
+		</div>
+	</li>
+	<li>
+		<label>Expiration (MM/YYYY)</label>
+		<div class="input-box">
+		<input id="card-expiry-month" size="2" type="text" value="01" style="width: 50px"/>
+		<span> / </span>
+		<input id="card-expiry-year" size="4" type="text" value="2020" style="width: 50px"/>
+		</div>
+    </li>
+	<li>
+		<label>CVV</label>
+		<div class="input-box">
+		<input id="card-cvv" size="3" type="password" value="123"/>
+		</div>
+    </li>
+	<li>	<span id="vt-cc-payment-status-message" class="validation-advice">
+	
+		<?php
+			if(!empty($error)){
+				Mage::getSingleton('core/session')->unsERM();
+				echo Mage::getStoreConfig('payment/vtdirect/error_message');		
+			}
+		?>
+	
+	</span>	</li>			
+	<li>
+		<!-- Additional Field -->
+		<input id="price" name="price" type="hidden" value="<?php echo Mage::getSingleton('checkout/cart')->getQuote()->getGrandTotal(); ?>"/>
+		<input id="token-id" name="payment[token-id]" type="hidden" />
+    </li>
+</ul>

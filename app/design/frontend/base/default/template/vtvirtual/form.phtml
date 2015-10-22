@@ -1,0 +1,26 @@
+<?php
+/**
+ * Veritrans VT Direct virtual account Model Standard
+ *
+ * @category   Mage
+ * @package    vtvirtual/form.phtml
+ * @author     denny
+ * this template is rendered when Veritrans payment method is chosen. This is description about Veritrans Payment Method
+ */
+?>
+<script type="text/javascript">
+	if(jQuery('.radio:checked').val() == 'vtvirtual') {
+		jQuery("#p_method_vtvirtual").removeAttr('checked');
+		
+	}
+</script>
+<ul class="form-list" id="payment_form_<?php echo $this->getMethodCode() ?>" style="display:none;">
+    <!-- <li>
+	<img src="<?php echo $this->getSkinUrl('images/Veritrans.png') ?>"/> <br/>
+	</li> -->
+	
+	<h3 style="float: left;margin: 0;"><?php echo $this->__('Bank Transfer Virtual Account'); ?></h3>
+    <ol>
+      <li><h4 style="float: left;margin: 0;"><?php echo $this->__('I want to pay with virtual account'); ?></h4></li>
+    </ol>
+</ul>

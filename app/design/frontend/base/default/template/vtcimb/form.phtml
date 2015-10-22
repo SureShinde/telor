@@ -1,0 +1,30 @@
+<?php
+/**
+ * Veritrans VT Direct cimb clicks Model Standard
+ *
+ * @category   Mage
+ * @package    vtcimb/form.phtml
+ * @author     denny
+ * this template is rendered when Veritrans payment method is chosen. This is description about Veritrans Payment Method
+ */
+?>
+<script type="text/javascript">
+	if(jQuery('.radio:checked').val() == 'vtcimb') {
+		jQuery("#p_method_vtcimb").removeAttr('checked');
+	}
+</script>
+<ul class="form-list" id="payment_form_<?php echo $this->getMethodCode() ?>" style="display:none;">
+<!--    <li>-->
+<!--	<img src="--><?php //echo $this->getSkinUrl('images/Veritrans.png') ?><!--"/> <br/>-->
+<!--	</li>-->
+	
+	<h3>CIMB Clicks Transaction</h3>
+    <ol>
+      <li>Make sure you have CIMB Clicks User ID and mPIN </li>
+      <li>The balance is debited automatically according to the transaction value</li>
+      <li>The minimum transaction value allowed is Rp. 10.000,00</li>
+      <li>You have 1 hour to complete this transaction before the transaction expires automatically</li>
+      <li>Make sure pop-up blocker is disabled in your browser</li>
+    </ol>
+	
+</ul>
