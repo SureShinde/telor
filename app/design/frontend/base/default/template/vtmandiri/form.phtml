@@ -1,0 +1,102 @@
+<?php
+/**
+ * Veritrans VT Direct mandiri click payModel Standard
+ *
+ * @category   Mage
+ * @package    vtmandiri/form.phtml
+ * @author     denny
+ * this template is rendered when Veritrans payment method is chosen. This is description about Veritrans Payment Method
+ */
+?>
+<script type="text/javascript">
+		<?php
+			$error=Mage::getSingleton('core/session')->getERMANDIRI();
+			if(!empty($error)){
+			?>
+				
+			jQuery("#p_method_vtmandiri").click();
+			<?php	
+			}
+			else{
+			?>
+				
+			jQuery("#p_method_vtmandiri").removeAttr('checked');
+			<?php	
+			
+			}
+		?>
+	
+
+	  function updateInput1(){
+		var ccNumber = jQuery('#mandiricardnumber').val();
+		if(ccNumber.length > 9) {
+		  jQuery('#input1').val(ccNumber.substring(ccNumber.length, ccNumber.length-10));
+		}
+	  }
+
+	  function paddy(n, p, c) {
+		var pad_char = typeof c !== 'undefined' ? c : '0';
+		var pad = new Array(1 + p).join(pad_char);
+		return (pad + n).slice(-pad.length);
+	  }
+
+	  function random5digit(){
+		return paddy(Math.floor(Math.random() * 99999), 5); 
+	  }
+	
+	  updateInput1();
+
+	  jQuery('#mandiricardnumber').keyup(function(){
+		updateInput1();
+	  });
+
+	  jQuery('#input3').val(random5digit());
+	  
+</script>
+<ul class="form-list" id="payment_form_<?php echo $this->getMethodCode() ?>" style="display:none;">
+<!--    <li>-->
+<!--	<img src="--><?php //echo $this->getSkinUrl('images/Veritrans.png') ?><!--"/> <br/>-->
+<!--	</li>-->
+	
+	<h3>Mandiri Clickpay Transaction</h3>
+    <ol>
+      <li>Activate your Mandiri Token</li>
+      <li>Insert Mandiri Token password</li>
+      <li>Click 3 when Mandiri Token displays APPLI.</li>
+      <li>Fill "Input 1": Last 10 digit of your Mandiri Debit card</li>
+      <li>Fill "Input 2": Transaction Value</li>
+      <li>Fill "Input 3": Request Number</li>
+      <li>Fill your Mandiri Token response into “Challenge Token”</li>
+    </ol>
+  <ul style="margin-top: 20px;">
+    <li>
+      <label style="width: 25%">Card Number  </label>
+      <input id="mandiricardnumber" name="payment[mandiri-card-number]" size="20" type="text" value=""/>
+    </li>
+    <li>
+      <label style="width: 25%">Input 1  </label>
+      <input id="input1" name="payment[mandiri-input1]" size="10" type="text" />
+    </li>
+    <li>
+      <label style="width: 25%">Input 2  </label>
+      <input id="input2" name="payment[mandiri-input2]" size="20" type="text" value="<?php echo Mage::getSingleton('checkout/cart')->getQuote()->getGrandTotal(); ?>" readonly="readonly"/>
+    </li>
+    <li>
+      <label style="width: 25%">Input 3  </label>
+      <input id="input3" name="payment[mandiri-input3]" size="5" type="text" readonly="readonly"/>
+    </li>
+    <li>
+      <label style="width: 25%">Challenge Token  </label>
+      <input id="token" name="payment[mandiri-token]" size="10" type="text" value=""/>
+    </li>
+    <li>	<span id="vt-mandiri-click-payment-status-message" class="validation-advice">
+	<?php
+  if(!empty($error)){
+    Mage::getSingleton('core/session')->unsERMANDIRI();
+    echo Mage::getStoreConfig('payment/vtmandiri/error_message');
+  }
+  ?>
+
+	</span>	</li>
+  </ul>
+</ul>

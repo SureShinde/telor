@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!--
+/**
+* @author Amasty Team
+* @copyright Copyright (c) 2013 Amasty (http://www.amasty.com)
+* @package Amasty_Ajaxlogin
+*/
+-->
+<config>
+    <modules>
+        <Amasty_Ajaxlogin>
+            <active>false</active>
+            <codePool>local</codePool>
+        </Amasty_Ajaxlogin>
+    </modules>
+</config>
